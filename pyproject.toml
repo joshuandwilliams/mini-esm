@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mini-esm"
+version = "0.0.1"
+description = "A minimal-dependency protein masked-language model, built from scratch."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Josh Williams" }]
+# Deps are PINNED so local (Intel Mac) and CI (Linux) resolve the *same* versions —
+# otherwise you get "green on CI, broken locally". See notes/env-constraints.
+dependencies = [
+    "numpy<2",        # torch 2.2.2 predates numpy 2.0; numpy 2.x breaks the torch<->numpy bridge
+    "torch<=2.2.2",   # last PyTorch wheel for x86 macOS; pin so CI matches this box
+    "matplotlib",
+    "biopython",
+]
+
+[project.optional-dependencies]
+# Installed with `pip install -e ".[dev]"`. Not needed to *run* the package, only to develop it.
+dev = [
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "black",
+    "pre-commit",
+    "mypy",
+]
+
+# Tell setuptools which import-packages to install. `reference` is a package too so tests
+# (and coverage) can `import reference.mlp_numpy`. `tests/` is deliberately NOT listed.
+[tool.setuptools]
+packages = ["miniesm", "reference"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+# Ruff = the LINTER (finds bugs/unused code/bad imports). This curated set is
+# black-compatible by design, so ruff and black never fight over whitespace.
+#   E4/E7/E9 = import/statement/syntax errors · F = pyflakes (unused vars/imports)
+#   I = import sorting · UP = modern-Python upgrades · B = common bug patterns
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
+
+[tool.black]
+# Black = the FORMATTER (owns layout & line length). Same line-length as ruff above.
+line-length = 100
+target-version = ["py312"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]

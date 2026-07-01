@@ -1,0 +1,23 @@
+# Runs automatically on every `git commit` (after `pre-commit install`).
+# Order matters: ruff --fix first (lint + auto-fix), then black (format the result).
+# NOTE: we deliberately do NOT use ruff's formatter hook — black is the formatter.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.20
+    hooks:
+      - id: ruff # lint only
+        args: [--fix]
+
+  - repo: https://github.com/psf/black
+    rev: 26.5.1
+    hooks:
+      - id: black
