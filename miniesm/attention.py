@@ -73,7 +73,8 @@ def scaled_dot_product_attention(Q: Tensor, K: Tensor, V: Tensor) -> tuple[Tenso
 
 
 if __name__ == "__main__":
-    # Quick smoke test you can run by hand: `python -m miniesm.attention`
+    # Quick smoke test you can run by hand (from mini-esm/, inside the binder env):
+    # `mamba run -n binder python -m miniesm.attention`
     # (Uses the river/bank/money example from your Obsidian note.)
     Q = torch.tensor([[2.0, 1.0], [3.0, 1.0], [1.0, 2.0]], dtype=torch.float64)
     K = torch.tensor([[3.0, 0.0], [1.0, 1.0], [0.0, 3.0]], dtype=torch.float64)
